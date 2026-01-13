@@ -1,17 +1,14 @@
 /***********************************************************************
 *
-*N  {oracle_spatial_toolkit.update_db_metadata_extent}
+*N  {oracle_spatial_toolkit.identify_all_spatial_data}
 *
 *:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 *
 *P  Purpose:
-*     This procedure allows for the automated updating of spatial metadata
-*     extents within the database.
-*	    Where the current session user is not the same as the schema owner of
-*	    the intended object, it is then necessary to have additional privs to
-* 	  update into MDSYS.SDO_GEOM_METADATA_TABLE.
-*	    This procedure can also be used for (materialized) views, but the
-*     spatial metadata must already exist!
+*     This code identifies any tables within the database which contain
+*     either vector geometry and rasters for Oracle data types
+*     (SDO_GEOMETRY, RASTERBLOB) or ESRI (ST_GEOMETRY, ST_RASTER, BLOB).
+*     Connected user must have access to SYS.ALL_TABLES, SYS.ALL_TAB_COLS.
 *E
 *:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 *
