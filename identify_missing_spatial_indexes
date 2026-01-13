@@ -1,0 +1,40 @@
+/***********************************************************************
+*
+*N  {oracle_spatial_toolkit.identify_missing_spatial_indexes}
+*
+*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+*
+*P  Purpose:
+*     This script identifies any spatial data which is missing a spatial
+*     index, and then attempts to create one on that table.
+*     Based upon the scripts from Stipica Pavicic (1) as reworked by 
+*     Tomo Bacinger (2).
+*     (1) http://spavicic.blogspot.com/2012/04/check-your-oracle-spatial-tables.html
+*     (2) https://hicsuntdra.co/blog/how-to-keep-your-oracle-spatial-indexes-healthy/
+*E
+*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+*
+*H  History:
+*
+*    See GitHub commits: 
+*	 https://github.com/joey-geoloog/oracle_spatial_toolkit/
+*E
+***********************************************************************/
+
+-- TODO: define procedure
+-- TODO: filter out any invalid tables as far as we can see
+-- TODO: build loop to take all missing tables
+
+SELECT ALIC.INDEX_OWNER, ALIC.TABLE_NAME, ALIC.COLUMN_NAME, ATBL.OWNER, ATBL.TABLE_NAME, ATBL.COLUMN_NAME
+FROM  ALL_IND_COLUMNS ALIC, ALL_TAB_COLS ATBL
+ WHERE ALIC.INDEX_OWNER (+) = ATBL.OWNER
+ AND   ALIC.TABLE_NAME  (+) = ATBL.TABLE_NAME
+ AND   ALIC.COLUMN_NAME (+) = ATBL.COLUMN_NAME
+ AND   ALIC.INDEX_OWNER        IS NULL
+ AND   ALIC.TABLE_NAME         IS NULL
+ AND   ALIC.COLUMN_NAME        IS NULL
+ AND   ATBL.DATA_TYPE_OWNER =  'MDSYS'
+ AND   ATBL.DATA_TYPE       =  'SDO_GEOMETRY'
+ AND   ATBL.OWNER          !=  'MDSYS';
+
+-- TODO: build with type MDSYS.SPATIAL_INDEX_V2
