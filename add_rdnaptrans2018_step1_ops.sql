@@ -8,13 +8,11 @@
 *     This procedure is step one of the adding / updating of RDNAPTRANS
 *     to the Oracle Spatial database for EPSG transformation 7000.
 *	  Step 1 involves defining the 'new' EPSG transformation and
-*	  preparing the load of the GSA (GSB ASCII) grid shift files.
+*	  preparing the op params for loading a grid shift (NTv2) file.
 *     Please use EPSG definitions from EPSG.ORG *NOT* epsg.io!!!
 *	  Info on the process and the tables used is available here:
 *     https://docs.oracle.com/en/database/oracle/oracle-database/21/spatl/lot.html
 *     https://docs.oracle.com/cd/E18283_01/appdev.112/e11830/sdo_cs_concepts.htm#SPATL727
-*    Upload your GSA (*not* GSB) file to a server folder and change this at '%FILE_LOC%'.
-*    If you still have a GSB file, convert it using the code at Esri/ntv2-file-routines.
 *E
 *:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 *
@@ -24,8 +22,6 @@
 *	 https://github.com/joey-geoloog/oracle_spatial_toolkit/
 *E
 ***********************************************************************/
-
-CREATE OR REPLACE DIRECTORY NTV2_WORK_DIR AS '%FILE_LOC%';
 
 INSERT INTO MDSYS.SDO_COORD_OPS (
    COORD_OP_ID,
@@ -82,6 +78,12 @@ INSERT INTO MDSYS.SDO_COORD_OP_PARAM_VALS (
    NULL);
    
 /* TODO: Unclear if this is a 1 to 1 replacement for the process described in add_rdnaptrans2018_step2_gsa.sql
+-- text for header
+*    Upload your GSA (*not* GSB) file to a server folder and change this at '%FILE_LOC%'.
+*    If you still have a GSB file, convert it using the code at Esri/ntv2-file-routines.
+-- opening action
+CREATE OR REPLACE DIRECTORY NTV2_WORK_DIR AS '%FILE_LOC%';
+-- loading routine
 EXECUTE SDO_CS.LOAD_EPSG_MATRIX(
 	7000,
 	8656,
